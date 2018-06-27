@@ -23,6 +23,14 @@
 {
     if (self = [super init]) {
         _sharedLinkURLString = sharedLinkURL.absoluteString;
+        
+        // Note: The shared_items endpoint fails on shared link URLs that contain
+        // trailing slashes. JIRA XXX has been filed to address this on the backend.
+        // Until fixed, trailing slashes must be removed prior to submission to endpoint.
+        if ([sharedLinkURL.absoluteString hasSuffix:@"/"]) {
+            _sharedLinkURLString = [sharedLinkURL.absoluteString substringToIndex:sharedLinkURL.absoluteString.length - 1];
+        }
+        
         _sharedLinkPassword = password;
     }
 
